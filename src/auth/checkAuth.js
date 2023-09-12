@@ -39,7 +39,6 @@ const permission = (permission) => {
             });
         }
 
-        console.log('permissions:', req.objectKey.permissions);
         const validPermission = req.objectKey.permissions.includes(permission);
 
         if (!validPermission) {

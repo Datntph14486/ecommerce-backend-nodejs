@@ -10,9 +10,47 @@ const { getInfoData } = require('../utils');
 const {
     BadRequestError,
     ConflictRequestError,
+    AuthFailureError,
 } = require('../core/error.response');
+const { findByEmail } = require('./shop.service');
 
 class AccessService {
+    static login = async ({ email, password, refreshToken = null }) => {
+        // check email in db
+        const foundShop = await findByEmail({ email });
+
+        if (!foundShop) {
+            throw new BadRequestError('Shop not found');
+        }
+        // match password
+        const match = bcrypt.compare(password, foundShop.password);
+
+        if (!match) {
+            throw new AuthFailureError('Authentication error');
+        }
+
+        //  created privateKey, publicKey
+
+        const privateKey = crypto.randomBytes(64).toString('hex');
+        const publicKey = crypto.randomBytes(64).toString('hex');
+
+        await KeyTokenService;
+
+        const tokens = await createTokenPair(
+            { userId: shop._id, email },
+            publicKey,
+            privateKey,
+        );
+
+        return {
+            shop: getInfoData({
+                fileds: ['_id', 'name', 'email'],
+                object: foundShop,
+            }),
+            tokens,
+        };
+    };
+
     static signUp = async ({ name, email, password }) => {
         // step 1 check email exists?
         const holderShop = await shopModel.findOne({ email }).lean();
