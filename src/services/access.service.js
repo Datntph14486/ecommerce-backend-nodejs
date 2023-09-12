@@ -13,7 +13,7 @@ class AccessService {
         try {
             // step 1 check email exists?
             const holderShop = await shopModel.findOne({ email }).lean();
-            console.log('🚀 ~ holderShop:', holderShop);
+
             if (holderShop) {
                 return {
                     code: 'xxxx',
@@ -33,20 +33,6 @@ class AccessService {
             if (newShop) {
                 //  created privateKey, publicKey
 
-                // const { privateKey, publicKey } = crypto.generateKeyPairSync(
-                //     'rsa',
-                //     {
-                //         modulusLength: 4096,
-                //         publicKeyEncoding: {
-                //             type: 'pkcs1',
-                //             format: 'pem',
-                //         },
-                //         privateKeyEncoding: {
-                //             type: 'pkcs1',
-                //             format: 'pem',
-                //         },
-                //     },
-                // );
                 const privateKey = crypto.randomBytes(64).toString('hex');
                 const publicKey = crypto.randomBytes(64).toString('hex');
 
